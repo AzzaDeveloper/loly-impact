@@ -27,7 +27,7 @@ Within an event banner:
 - Any 4 stars rolled will be **50%** one of the rate-up 4 star.
 - Any 3 stars rolled will be **100%** one of the rate-up 3 star.
 
-Pick a banner with **~banner <banner name>**.
+Pick a banner with **~banner \<banner name\>**.
 
 #### ~collection
 See how many characters you have collected in total!
