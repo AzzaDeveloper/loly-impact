@@ -1,7 +1,7 @@
 # Changelog
 Macros or any form of automated messaging are not allowed.
 ***
-## Version 1.1
+## Version 1.2
 **Important changes:**
 ### Banners
 - Banners! You now need to set your banner with **~banner** before you roll. Use **~banners** to see the available banners.
