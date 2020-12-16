@@ -15,7 +15,7 @@ Within an event banner:
 ### Other important changes:
 - New standard banners rate: **2.5%** for a 5 star.
 - 20 new characters! Coming next update is a list of all characters so you can see which one you are missing.
-- You can now use **~roll 10** to roll 10 times. It will show you the highest rarity character.
+- ~~You can now use **~roll 10** to roll 10 times. It will show you the highest rarity character.~~ Being added very soon!
 - Rolling cooldown is now 2.5 seconds.
 - You can only get a point every 2 second.
 
