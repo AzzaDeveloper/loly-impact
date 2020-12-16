@@ -11,7 +11,7 @@ Within an event banner:
 - Rates are **1%** for the event exclusive, **5%** for 5 stars, **20%** for 4 stars and the rest are 3 stars.
 - Any 5 stars rolled will be **100%** one of the rate-up 5 star.
 - Any 4 stars rolled will be **50%** one of the rate-up 4 star.
-- Any 3 stars rolled will be **100%** one of the rate-up 3 star.
+- Any 3 stars rolled will be **25%** one of the rate-up 3 star.
 ### Other important changes:
 - New standard banners rate: **2.5%** for a 5 star.
 - 20 new characters! Coming next update is a list of all characters so you can see which one you are missing.
