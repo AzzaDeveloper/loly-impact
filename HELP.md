@@ -14,7 +14,7 @@ Rolls the gacha for 5 points and get a random character!
 You need to set your banner first before you can roll.
 
 #### ~banners
-View avalaible banners. Use **~banners <banner name>** to view more info about a specific banner!
+View avalaible banners. Use **~banners \<banner name\>** to view more info about a specific banner!
 Within a standard banner:
 - **2.5%** for a 5 star
 - **10%** for a 4 star
