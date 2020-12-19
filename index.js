@@ -42,7 +42,7 @@ var characters = {
 				usagi_duc: "Usagi Đức",
 				shocked_y: "ý bị sốc đưa nó đi bệnh viện nhanh",
 				panik_chau: "Panik Châu",
-				thinking_Khoa: "Phisolophist Khoa",
+				thinking_khoa: "Phisolophist Khoa",
 				masochist_tuan: "Masochist Tuấn, part of the Abuse set.",
 				disappointed_nguyen: "Disappointed Nguyên",
 				bruh_minh: "bủh bủh lmao minh",
