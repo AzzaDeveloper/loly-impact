@@ -371,7 +371,7 @@ login(credentials, (err, api) => {
 						}
 					});
 				} else {
-					break
+					
 				}
 			})
 		}
