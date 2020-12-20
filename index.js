@@ -1,13 +1,15 @@
 const fs = require("fs");
+//
 const auth = require("./auth.json");
 const login = require("facebook-chat-api");
+//
 const readline = require('readline');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 // Facebook credentials
-var credentials = {email: auth.email, password: auth.password};
+//var credentials = {email: auth.email, password: auth.password};
 var id = "100059859331194"
 // Gacha systems
 var char_rarity = {
@@ -22,115 +24,7 @@ var char_rarity = {
 		exclusive: 0.01
 	}
 }
-var characters = {
-	english10a1: {
-		name: "10A1",
-		type: "standard",
-		base: "english10a1",
-		description: "The standard 10A1 banner, including pics from everyone in the class.",
-		chars: {
-			two_star: {
-				blursed_linh: "Blursed Linh",
-				exvet_hoang: "Ex-veteran Hoàng",
-				flopped_tuan: "Flopped Tuấn",
-				gangstar_ly: "Gangstar Ly",
-				mad_tuan: "Mad Tuấn",
-				no_nhu: "No U Như",
-				wholesome_buoi: "Wholesome minkpuoi",
-				khinh_ly: "Khinhbi Ly",
-				pussy_ly: "Pussy Ly",
-				usagi_duc: "Usagi Đức",
-				shocked_y: "ý bị sốc đưa nó đi bệnh viện nhanh",
-				panik_chau: "Panik Châu",
-				thinking_khoa: "Phisolophist Khoa",
-				masochist_tuan: "Masochist Tuấn, part of the Abuse set.",
-				disappointed_nguyen: "Disappointed Nguyên",
-				bruh_minh: "bủh bủh lmao minh",
-				tuan: "4'n",
-				happy_hoang: "Hoàng, but he actually smiles wholesomely",
-				slap_tuan: "tuấn but he slaps you",
-				buddha_hoang: "Buddha Hoàng",
-				unsure_khanh: "Unsure Khanh",
-				falling_y: "oh shit ý đang rơi đỡ nó nhanh",
-				caught_khoa: "Caught Khoa",
-				//sad_tuan: "Tuấn sầu đời",
-				what_tuan: "cái đéo gì vậy bro sao giờ này còn chơi gacha",
-				leave_tuan: "KHÔNG GACHA ƠI ĐỪNG BỎ TÔI"
-			},
-			three_star: {
-				bird_minh: "Bird Minh",
-				bondage_tuan: "Bondage Tuấn",
-				cash_linh: "Cash Money Linh",
-				veteran_hoang: "Veteran Hoàng",
-				wholesome_minh: "Whomesome Minh",
-				youngling_duc: "Youngling Đức",
-				hoodie_leanh: "Lê Anh in a Hoodie",
-				baby_ly: "Baby Ly",
-				society_minh: "địt mẹ xã hội Minh",
-				graduate_duc: "depressed scholar Đức",
-				depressed_y: "ý bị chamkam",
-				poggers_linh: "POGCHAMP LMAO POGGERS LINH",
-				nightclub_minh: "minh lên cơn nghiện",
-				abused_tuan: "Abused Tuấn, part of the Abuse set.",
-				abusing_linh: "Abuser Linh, part of the Abuse set.",
-				mlem_minh: "mlem mlem Minh",
-				scary_linh: "i have no idea what is this im scared please help",
-				bystander_nam: "Bystander Nam, part of the Abuse set.",
-				night_leanh: "One night stand Lê Anh",
-				assault_tuan: "Assault Tuấn, part of the Assault set.",
-				assault_nam: "Observer Nam, part of the Assault set.",
-				sleepy_minh: "Sleepy Minh - who woke him up let my man sleep",
-				sleepy_linh: "Sleepy Linh - linh are you alive",
-				sad_tuan: "Tuấn sầu đời"
-			},
-			four_star: {
-				alien_tuan: "Alien Tuấn",
-				doiso_khanh: "Khánh Đội Sổ",
-				hoe_leanh: "Lê Anh's Hoe",
-				loly: "Loly.",
-				thighdeology_khoa: "Khoa, bishop of Thighdeology",
-				boomer_linh: "Boomer Linh, whos trying to be cool with the kids.",
-				hanyu: "Hanyu Yuzuru, angel on ice.",
-				mummy_leanh: "Lê Anh, but he's kinda not ok.",
-				gremlin_leanh: "Lê Anh, but he's a gremlin. That's all.",
-				cock_hoang: "Hoàng devouring a huge cucumber.",
-				worn_linh: "Linh but she just woke up and rather tired."
-			},
-			five_star: {
-				blessed_ly: "Blessed Ly.",
-				handsome_hoang: "Hoàng hotboy",
-				voyage_math: "Cô xinh đẹp tuyệt vời",
-				fly_nhan: "Nhan: He who wish to ascend will ascend.",
-				masochist_hoang: "Masochist Hoàng.",
-				ngan: "WHY IS SHE SO CUTE DOING NOTHING WHAT THE FUCK\nno, i'm not biased. shut up.",
-				harem_ngan: "NGÂN: UNLIMITED HUSBANDO WORKS",
-				protagonist_tuan: "Protagonist Tuấn, about to protagonise you all."
-			}
-		}
-	},
-	xmas: {
-		name: "❄️ Christmas Miracles ❄️",
-		type: "event",
-		description: "Christmas is here, but it isn't gonna make you luckier.\n\nAbuse set rate up!\nYuzuru rate up!\nHarem ngan rate up!\nA special event character awaits?",
-		base: "english10a1",
-		chars: {
-			three_star: {
-				abused_tuan: "Abused Tuấn, part of the Abuse set.",
-				abusing_linh: "Abuser Linh, part of the Abuse set.",
-				bystander_nam: "Bystander Nam, part of the Abuse set."
-			},
-			four_star: {
-				hanyu: "Hanyu Yuzuru, angel on ice."
-			},
-			five_star: {
-				harem_ngan: "NGÂN: UNLIMITED HUSBANDO WORKS"
-			},
-			exclusive: {
-				padoru: "Padoru - What a nice girl. Surely she's headed for a bright future."
-			}
-		}
-	}
-}
+const characters = require("./characters.json");
 // User data
 var users = {}
 var rolled = false;
@@ -271,9 +165,11 @@ function roll(message, name, user) {
 			}
 		} else {
 			console.log("is exclusive: " + rarity)
-			msg = {
-				body: name + ", you pulled an event character:\n" + characters[user.banner].chars[rarity][0] + "\nRarity: " + stars,
-				attachment: fs.createReadStream(__dirname + '/gacha/' + user.banner + "/exclusive.jpg")
+			for (var char in characters[user.banner].chars[rarity]) {
+				msg = {
+					body: name + ", you pulled an event character:\n" + char + "\nRarity: " + stars,
+					attachment: fs.createReadStream(__dirname + '/gacha/' + user.banner + "/exclusive.jpg")
+				}
 			}
 		}
 	}
@@ -317,7 +213,7 @@ login(credentials, (err, api) => {
 				totalChatCount: 0
 			}
 			if (user == undefined) {
-				user = init;
+				user = init; 
 			}
 			for(var key in init) {
 				if (user[key] == undefined) {
@@ -446,7 +342,7 @@ login(credentials, (err, api) => {
 				user.registerPoint = false;
 				setTimeout(() => {
 					user.registerPoint = true;
-				}, 2000);
+				}, 1000);
 			}
 		}
 	});
@@ -468,11 +364,15 @@ login(credentials, (err, api) => {
 			fs.writeFileSync('usersdata.json', JSON.stringify(users));
 		} else if (input == "announcement") {
 			rl.question(`Enter message:`, (input) => {
-				api.getThreadList(100000, null, ["INBOX"], (err, list) => {
-					for(var i = 0; i < list.length; i++) {
-						api.sendMessage(input, list[i].threadID);
-					}
-				});
+				if (input != "exit") {
+					api.getThreadList(100000, null, ["INBOX"], (err, list) => {
+						for(var i = 0; i < list.length; i++) {
+							api.sendMessage(input, list[i].threadID);
+						}
+					});
+				} else {
+					break
+				}
 			})
 		}
 	});	
