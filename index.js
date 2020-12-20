@@ -316,6 +316,9 @@ login(credentials, (err, api) => {
 				//
 				totalChatCount: 0
 			}
+			if (user == undefined) {
+				user = init;
+			}
 			for(var key in init) {
 				if (user[key] == undefined) {
 					user[key] = init[key]
@@ -392,7 +395,7 @@ login(credentials, (err, api) => {
 						// Check if the user have enough points
 						console.log(user.rollable)
 						if (characters[user.banner] == undefined) {
-							api.sendMessage("It seems you have an outdated/invalid banner. Please set your banner with ~banner <banner name> or use ~banners to view current banners and try again.", message.threadID)
+							api.sendMessage("It seems you have an outdated/invalid banner.\nPlease set your banner with ~banner <banner name> or use ~banners to view current banners and try again.", message.threadID)
 							return
 						}
 						if (user.rollable) {
