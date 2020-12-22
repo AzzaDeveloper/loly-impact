@@ -9,7 +9,7 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 // Facebook credentials
-//var credentials = {email: auth.email, password: auth.password};
+var credentials = {email: auth.email, password: auth.password};
 var id = "100059859331194"
 // Gacha systems
 var char_rarity = {
@@ -181,14 +181,12 @@ function roll(message, name, user) {
 	return messages;
 }
 // Loading user credentials
-console.log("loading credentials")
 var file = fs.readFileSync(__dirname + '/usersdata.json')
 users = JSON.parse(file);
-console.log(users)
 
 // Initating
 var running = true;
-login(credentials, (err, api) => {
+/* login(credentials, (err, api) => {
 	if(err) return console.error(err);
 	// Save the credentials
 	fs.writeFileSync('appstate.json', JSON.stringify(api.getAppState()));
@@ -227,8 +225,6 @@ login(credentials, (err, api) => {
 				var args = message.body.substring(1).split(' ');
 				const cmd = args[0];
 				args = args.splice(1);
-				// Get the user name
-				//
 				// Get the max amount of characters
 				var maxChar = 0;
 				for(var banner in characters) {
@@ -377,7 +373,30 @@ login(credentials, (err, api) => {
 		}
 	});	
 });
-// Autosaving
+// Autosaving */
 setInterval(() => {
 	fs.writeFileSync('usersdata.json', JSON.stringify(users));
 }, 1000);
+// Answering requests for usersdata
+const express = require("express");
+const router = express.Router();
+const app = express();
+var http = require('http').createServer(app);
+var io = require('socket.io')(http);
+// Serve assets
+app.use(express.static(__dirname + "/gacha"))
+// Serve assets
+app.use(express.static(__dirname + "/assets"))
+// serve the main index file
+router.get('/',function(req, res) {
+    res.sendFile(__dirname+ '/index.html');
+});
+// socketIO connection handler i am dying
+io.on('connection', (socket) => {
+	socket.on("userdataRequest", data => {
+		socket.emit("userdata", users[data])
+	})
+});
+// add router in the Express app.
+app.use("/", router);
+http.listen(80);

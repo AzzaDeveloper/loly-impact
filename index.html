@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>Loly Impact</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id="header">
+            <!-- Logo image -->
+            <img src="impact.png" id="icon">
+            <button class="tab login" id="login">Login with Facebook</button>
+            <button class="tab">Settings</button>
+            <button class="tab">Help</button>
+            <button class="tab disabled">Expeditions</button>
+            <button class="tab disabled">Arena</button>
+            <button class="tab disabled">Party</button>
+            <button class="tab">Collection</button>
+            <button class="tab selected">Characters</button>
+        </div>
+        <div id="container">
+            <p class="title">Loly's Character List</p>
+            <div id="banners">
+                <button class="banner" onclick="switchBanner('all')">All</button>
+                <button class="banner" onclick="switchBanner('english10a1')">english10a1</button>
+                <button class="banner" onclick="switchBanner('xmas')">xmas</button>
+            </div>
+            <div id="rarities">
+                <button class="banner" onclick="getChars('all')">All</button>
+                <button class="banner" onclick="getChars('two_star')">⭐⭐</button>
+                <button class="banner" onclick="getChars('three_star')">⭐⭐⭐</button>
+                <button class="banner" onclick="getChars('four_star')">⭐⭐⭐⭐</button>
+                <button class="banner" onclick="getChars('five_star')">⭐⭐⭐⭐⭐</button>
+                <button class="banner" onclick="getChars('exclusive')">🌟🌟🌟🌟🌟</button>
+            </div>
+            <div id="inner-container">
+            </div>
+        </div>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+          </script>
+          <script src="main.js"></script>
+    </body>
+</html>
