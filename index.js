@@ -8,6 +8,7 @@ const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
+console.log("Initiating..")
 // Facebook credentials
 var credentials = {email: auth.email, password: auth.password};
 var id = "100059859331194"
@@ -157,14 +158,11 @@ function roll(message, name, user) {
 		}
 	} else {
 		if (rarity != "exclusive") {
-			console.log("not exclusive")
-			console.log(character)
 			msg = {
 				body: name + ", you pulled a character:\n" + characters[baseBanner].chars[rarity][character] + "\nRarity: " + stars,
 				attachment: fs.createReadStream(__dirname + '/gacha/' + baseBanner + "/" + rarity + "/" + character + ".jpg")
 			}
 		} else {
-			console.log("is exclusive: " + rarity)
 			for (var char in characters[user.banner].chars[rarity]) {
 				msg = {
 					body: name + ", you pulled an event character:\n" + char + "\nRarity: " + stars,
@@ -180,10 +178,11 @@ function roll(message, name, user) {
 	user.points -= 5;
 	return messages;
 }
+console.log("Loading users data...")
 // Loading user credentials
 var file = fs.readFileSync(__dirname + '/usersdata.json')
 users = JSON.parse(file);
-
+console.log("Logging in...")
 // Initating
 var running = true;
 /* login(credentials, (err, api) => {
@@ -314,6 +313,8 @@ var running = true;
 											if (user.collectedChars.indexOf(messages[2]) == -1) {
 												user.collectedChars.push(messages[2])
 											}
+											console.log(name +": Roll request");
+											console.log("Character: " + messages[2]);
 										}
 									})
 									// Not letting the player roll for another 2.5 seconds
@@ -377,6 +378,7 @@ var running = true;
 setInterval(() => {
 	fs.writeFileSync('usersdata.json', JSON.stringify(users));
 }, 1000);
+console.log("Setting up web servers...")
 // Answering requests for usersdata
 const express = require("express");
 const router = express.Router();
@@ -387,6 +389,8 @@ var io = require('socket.io')(http);
 app.use(express.static(__dirname + "/gacha"))
 // Serve assets
 app.use(express.static(__dirname + "/assets"))
+// Serve certs
+app.use(express.static(__dirname + "/cert"))
 // serve the main index file
 router.get('/',function(req, res) {
     res.sendFile(__dirname+ '/index.html');
@@ -397,6 +401,7 @@ io.on('connection', (socket) => {
 		socket.emit("userdata", users[data])
 	})
 });
-// add router in the Express app.
+// add router in the Express app, listen for both http and https
 app.use("/", router);
 http.listen(80);
+console.log("Completed! Listening on port 80 and 443")
