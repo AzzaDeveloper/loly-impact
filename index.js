@@ -1,4 +1,5 @@
 const fs = require("fs");
+const crypto = require("crypto");
 //
 const auth = require("./auth.json");
 const login = require("facebook-chat-api");
@@ -25,6 +26,9 @@ var char_rarity = {
 		exclusive: 0.01
 	}
 }
+// Verifying keys
+var verifyKeys = {};
+//
 const characters = require("./characters.json");
 // User data
 var users = {}
@@ -178,6 +182,16 @@ function roll(message, name, user) {
 	user.points -= 5;
 	return messages;
 }
+// Function for making random strings
+function makeid(length) {
+	var result           = '';
+	var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@!@#$%^&*';
+	var charactersLength = characters.length;
+	for (var i = 0; i < length; i++ ) {
+	   result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
+}
 console.log("Loading users data...")
 // Loading user credentials
 var file = fs.readFileSync(__dirname + '/usersdata.json')
@@ -185,7 +199,7 @@ users = JSON.parse(file);
 console.log("Logging in...")
 // Initating
 var running = true;
-/* login(credentials, (err, api) => {
+login(credentials, (err, api) => {
 	if(err) return console.error(err);
 	// Save the credentials
 	fs.writeFileSync('appstate.json', JSON.stringify(api.getAppState()));
@@ -200,6 +214,11 @@ var running = true;
 			// Get the user data, if not then add and initialize
 			var user = users[message.senderID]
 			var init = {
+				// User info
+				username: "",
+				password: "",
+				salt: "",
+				//
 				registerPoint: true,
 				rollable: true,
 				//
@@ -242,6 +261,26 @@ var running = true;
 					case "test":
 						console.log(message.threadID)
 						api.sendMessage("This is a test message.", message.threadID);
+						break;
+					case "verify":
+						if (args[0] != undefined) {
+							if (verifyKeys[args[0]] != undefined) {
+								var info = verifyKeys[args[0]];
+								console.log(info)
+									user.username = info.username;
+									user.salt = makeid(7);
+									user.password = require("crypto")
+										.createHmac("sha256", user.salt)
+										.update(info.password)
+										.digest("hex");
+									verifyKeys[args[0]] = undefined;
+									api.sendMessage("Verification completed! Go back to the website and reload the page, then proceed to log in.", message.threadID);
+							} else {
+								api.sendMessage("No valid account found! Please register and verify again", message.threadID);
+							}
+						} else {
+							api.sendMessage("Please input an OPT code verify your account.", message.threadID);
+						}
 						break;
 					case "topup":
 					case "nap":
@@ -374,7 +413,7 @@ var running = true;
 		}
 	});	
 });
-// Autosaving */
+// Autosaving
 setInterval(() => {
 	fs.writeFileSync('usersdata.json', JSON.stringify(users));
 }, 1000);
@@ -383,25 +422,70 @@ console.log("Setting up web servers...")
 const express = require("express");
 const router = express.Router();
 const app = express();
+// Keys
+var privateKey  = fs.readFileSync('keys/privkey.pem', 'utf8');
+var certificate = fs.readFileSync('keys/fullchain.pem', 'utf8');
+var creds = {key: privateKey, cert: certificate};
+// Creating the servers
 var http = require('http').createServer(app);
+var https = require('https').createServer(creds, app);
 var io = require('socket.io')(http);
+var ioSecured = require('socket.io')(https);
 // Serve assets
 app.use(express.static(__dirname + "/gacha"))
-// Serve assets
 app.use(express.static(__dirname + "/assets"))
-// Serve certs
 app.use(express.static(__dirname + "/cert"))
 // serve the main index file
 router.get('/',function(req, res) {
     res.sendFile(__dirname+ '/index.html');
 });
+// function for finding username straight from stack
+function findUser(username) {
+	for(id in users) {
+		if (users[id].username == username) {
+			return id;
+		}
+	}
+	return undefined;
+}
 // socketIO connection handler i am dying
-io.on('connection', (socket) => {
+
+ioSecured.on('connection', (socket) => {
+	// Registering / Login
+	socket.on("login", data => {
+		// Search for username in userlist
+		console.log("login request")
+		var id = findUser(data.username);
+		if (id == undefined) {
+			var otp = makeid(6);
+			verifyKeys[otp] = {
+				username: data.username,
+				password: data.password
+			}
+			socket.emit("loginState", {state: "register", payload: otp});
+			setTimeout(() => {
+				if (verifyKeys[otp] == undefined) {
+					verifyKeys[otp] = undefined;
+				}
+			}, 5 * 60 * 1000);
+		} else {
+			var password = require("crypto")
+			.createHmac("sha256", users[id].salt)
+			.update(data.password)
+			.digest("hex");
+			if (users[id].password == password) {
+				socket.emit("loginState", {state: "success", payload: id});
+			} else {
+				socket.emit("loginState", {state: "wrongPassword", payload: undefined})
+			}
+		}
+	})
 	socket.on("userdataRequest", data => {
-		socket.emit("userdata", users[data])
+		socket.emit("userdata", users[data].collectedChars)
 	})
 });
 // add router in the Express app, listen for both http and https
 app.use("/", router);
 http.listen(80);
+https.listen(443);
 console.log("Completed! Listening on port 80 and 443")

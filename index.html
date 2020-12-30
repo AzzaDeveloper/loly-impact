@@ -5,16 +5,17 @@
     </head>
     <body>
         <div id="header">
+            <link rel="icon" type="image/png" href="/icon1024.jpg"/>
             <!-- Logo image -->
             <img src="impact.png" id="icon">
-            <button class="tab login" id="login">Login with Facebook</button>
-            <button class="tab">Settings</button>
-            <button class="tab">Help</button>
+            <button class="tab login" id="login" onclick="loginHandler(true)">Login / Register</button>
+            <button class="tab disabled">Settings</button>
+            <button class="tab disabled">Help</button>
             <button class="tab disabled">Expeditions</button>
             <button class="tab disabled">Arena</button>
             <button class="tab disabled">Party</button>
-            <button class="tab">Collection</button>
-            <button class="tab selected">Characters</button>
+            <button class="tab" onclick="switchTabs('collection')" id="collection">Collection</button>
+            <button class="tab selected" onclick="switchTabs('characters')" id="characters">Characters</button>
         </div>
         <div id="container">
             <p class="title">Loly's Character List</p>
@@ -32,7 +33,33 @@
                 <button class="banner" onclick="getChars('exclusive')">🌟🌟🌟🌟🌟</button>
             </div>
             <div id="inner-container">
+                <!-- Boilerplate char -->
+                <div class="char">
+                    <div class="uncollected">
+                        <p class="uncollected-text">Not owned!</p>
+                    </div>
+                    <img src="english10a1/two_star/flopped_tuan.jpg" class="char-img">
+                    <p title="Flopped Tuấn" class="char-name">Flopped Tuấn</p>
+                    <p class="char-internal">flopped_tuan</p>
+                    <p class="char-rarity">⭐⭐</p>
+                </div>
             </div>
+        </div>
+        <!-- Login module -->
+        <div id="login-module">
+            <p id="login-header">Login / Register</p>
+            <button class="close-login" onclick="loginHandler(false)">X</button>
+            <p id="login-header-subtext">If your account info isn't found, you will be prompted to verify with Messenger.</p>
+            <p class="login-title">Username:</p>
+            <input id="username">
+            <p class="login-title">Password:</p>
+            <input id="password" type="password">
+            <button id="login-register" onclick="regis()">Login / Register</button>
+        </div>
+        <div id="verify">
+            <button class="close-login" onclick="loginHandler(false)">X</button>
+            <p id="verify-header">Please verify your account! Message Loly on messenger with the following command:</p>
+            <p id="verify-text">~verify</p>
         </div>
         <script src="/socket.io/socket.io.js"></script>
         <script>

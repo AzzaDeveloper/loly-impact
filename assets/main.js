@@ -1,7 +1,4 @@
-const getJSON = async url => {
-    const response = await fetch(url);
-    return response.json(); // get JSON from the response 
-}
+console.log("Hey there! I'm glad you're checking out my code. Everything is available on GitHub!");
 var socket = io();
 // banner switcher
 var curBanner = "all";
@@ -11,7 +8,7 @@ function switchBanner(newBanner) {
 }
 // character handler
 var characters = {};
-function getChars(condition) {
+function getChars(condition, isCollected) {
     var currentDiv = document.getElementById("inner-container");
         // Clearing the current content of the container
         currentDiv.innerHTML = "";
@@ -80,42 +77,102 @@ function getChars(condition) {
                     }
                     char_rarity.classList.add("char-rarity");
                     div.appendChild(char_rarity)
+                if (currentTab == "collection") {
+                    socket.emit("userdataRequest", userID, (res) => {
+                        if (res.indexOf(chars) == -1) {
+                            var uncollected = document.createElement("div");
+                                uncollected.classList.add("uncollected");
+                                div.appendChild(uncollected);
+                            var uncollectedText = document.createElement("p");
+                                uncollected.classList.add("uncollected-text");
+                                uncollected.appendChild(uncollectedText);
+                        }
+                    });
+                }
             }
         }
     }
 }
-// Get the characters from the json file
+// Fetching the characters from the json file
 getJSON("https://raw.githubusercontent.com/AzzaDeveloper/loly-impact/master/characters.json")
 .then(data => {
     characters = data;
     getChars("all");
 });
-// Facebook login status
-var loggedIn = false;
-window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '1273146346393658',
-      cookie     : true,
-      xfbml      : true,
-      version    : 'v9.0'
-    });
-    FB.getLoginStatus(function(response) {
-        if (response.status == "connected") {
-            document.getElementById("login").innerHTML = "Logged in as " + "";
-            socket.emit("userdataRequest", response.authResponse.userID);
-            loggedIn = true;
+var userID = "";
+// Switching tabs
+var currentTab = "characters";
+function switchTabs(tab) {
+    if (tab == "collection") {
+        if (userID == "") {
+            alert("You have not logged in!");
+            return
         }
-    });
-    FB.AppEvents.logPageView();   
-      
-  };
+    }
+    document.getElementById(currentTab).classList.remove("selected")
+    currentTab = tab;
+    document.getElementById(currentTab).classList.add("selected")
+    switch (tab) {
+        case "characters":
+            getChars("all");
+            break;
+        case "collection":
+            getChars("all");
+            break;
+    }
+}
+// users data and stuff
 
-(function(d, s, id){
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {return;}
-    js = d.createElement(s); js.id = id;
-    js.src = "https://connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
+var loggedIn = false;
+function login(response) {
+    if (!loggedIn) {
 
-//
+    }
+}
+ // Handling the login button
+var overlay = "";
+function loginHandler(state) {
+    if (state) {
+        if (overlay == "") {
+            // Blurring and darkening the background
+            document.getElementsByTagName("body")[0].classList.add("blur");
+            // Prompting the login
+            document.getElementById("login-module").style.display = "block";
+            overlay = "login";
+        }
+    } else {
+        if (overlay == "login") {
+            document.getElementById("login-module").style.display = "none";
+        } else if (overlay == "verify") {
+            document.getElementById("verify").style.display = "none";
+        }
+        document.getElementsByTagName("body")[0].classList.remove("blur");
+        overlay = "";
+    }
+}
+// Handling the regis/log button
+function regis() {
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+    // Sending a request to the server with the said creds
+    socket.emit("login", {username: username, password: password})
+}
+// Handling
+socket.on("loginState", (data) => {
+    if (overlay == "login") {
+        document.getElementById("login-module").style.display = "none";
+        document.getElementById("verify").style.display = "block";
+        overlay = "verify";
+        if (data.state == "register") {
+            document.getElementById("verify-header").innerHTML = "Please verify your account! Message Loly on messenger with the following command:"
+            document.getElementById("verify-text").innerHTML = "~verify " + data.payload;
+        } else if (data.state == "success") {
+            document.getElementById("verify-header").innerHTML = "Login success!"
+            document.getElementById("verify-text").innerHTML = "Go ahead and close this window. It's the little X button up there.";
+            userID = data.payload;
+        } else if (data.state == "wrongPassword") {
+            document.getElementById("verify-header").innerHTML = "Wrong password!"
+            document.getElementById("verify-text").innerHTML = "Close this window and try logging in again.";
+        }
+    }
+})
