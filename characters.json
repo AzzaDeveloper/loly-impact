@@ -1,6 +1,7 @@
 {
 	"english10a1": {
 		"name": "10A1",
+		"availability": true,
 		"type": "standard",
 		"base": "english10a1",
 		"description": "The standard 10A1 banner, including pics from everyone in the class.",
@@ -85,6 +86,7 @@
 	},
 	"xmas": {
 		"name": "❄️ Christmas Miracles ❄️",
+		"availability": false,
 		"type": "event",
 		"description": "Christmas is here, but it isn't gonna make you luckier.\n\nAbuse set rate up!\nYuzuru rate up!\nHarem ngan rate up!\nA special event character awaits?",
 		"base": "english10a1",

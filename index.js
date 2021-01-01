@@ -327,6 +327,14 @@ login(credentials, (err, api) => {
 						if (characters[user.banner] == undefined) {
 							api.sendMessage("It seems you have an outdated/invalid banner.\nPlease set your banner with ~banner <banner name> or use ~banners to view current banners and try again.", message.threadID)
 							return
+						} else if (characters[user.banner] == "None") {
+							api.sendMessage("You don't have a banner~.\nPlease set your banner with ~banner <banner name> or use ~banners to view current banners and try again.", message.threadID)
+							return
+						} else if (character[user.banner].availability == false) {
+							api.sendMessage("This banner is now removed~ Please wait for it's rerun!.\nSet a new banner to continue rolling!", message.threadID)
+							return
+						} else {
+							api.sendMessage("Oops. You shouldn't be able to see this. Please contact the developer!", message.threadID);
 						}
 						if (user.rollable) {
 							if (user.banner != "None") {
