@@ -456,6 +456,7 @@ ioSecured.on('connection', (socket) => {
 		// Search for username in userlist
 		console.log("login request")
 		var id = findUser(data.username);
+		// If username not found in database, prompt user to register
 		if (id == undefined) {
 			var otp = makeid(6);
 			verifyKeys[otp] = {
@@ -468,13 +469,15 @@ ioSecured.on('connection', (socket) => {
 					verifyKeys[otp] = undefined;
 				}
 			}, 5 * 60 * 1000);
+		// Else check if pasword is correct
 		} else {
 			var password = require("crypto")
 			.createHmac("sha256", users[id].salt)
 			.update(data.password)
 			.digest("hex");
 			if (users[id].password == password) {
-				socket.emit("loginState", {state: "success", payload: id});
+				// Send back the data with their collected characters
+				socket.emit("loginState", {state: "success", payload: users[id].collectedChars});
 			} else {
 				socket.emit("loginState", {state: "wrongPassword", payload: undefined})
 			}

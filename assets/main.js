@@ -1,3 +1,7 @@
+const getJSON = async url => {
+    const response = await fetch(url);
+    return response.json(); // get JSON from the response 
+}
 console.log("Hey there! I'm glad you're checking out my code. Everything is available on GitHub!");
 var socket = io();
 // banner switcher
@@ -8,6 +12,7 @@ function switchBanner(newBanner) {
 }
 // character handler
 var characters = {};
+var collectedChars = {};
 function getChars(condition, isCollected) {
     var currentDiv = document.getElementById("inner-container");
         // Clearing the current content of the container
@@ -78,16 +83,16 @@ function getChars(condition, isCollected) {
                     char_rarity.classList.add("char-rarity");
                     div.appendChild(char_rarity)
                 if (currentTab == "collection") {
-                    socket.emit("userdataRequest", userID, (res) => {
-                        if (res.indexOf(chars) == -1) {
-                            var uncollected = document.createElement("div");
-                                uncollected.classList.add("uncollected");
-                                div.appendChild(uncollected);
-                            var uncollectedText = document.createElement("p");
-                                uncollected.classList.add("uncollected-text");
-                                uncollected.appendChild(uncollectedText);
-                        }
-                    });
+                    console.log(collectedChars)
+                     if (collectedChars.indexOf(chars) == -1) {
+                        var uncollected = document.createElement("div");
+                            uncollected.classList.add("uncollected");
+                            div.prepend(uncollected);
+                        var uncollectedText = document.createElement("p");
+                            uncollectedText.classList.add("uncollected-text");
+                            uncollectedText.innerHTML = "Not owned!"
+                            uncollected.append(uncollectedText);
+                    };
                 }
             }
         }
@@ -100,11 +105,12 @@ getJSON("https://raw.githubusercontent.com/AzzaDeveloper/loly-impact/master/char
     getChars("all");
 });
 var userID = "";
+var collectedChars = {};
 // Switching tabs
 var currentTab = "characters";
 function switchTabs(tab) {
     if (tab == "collection") {
-        if (userID == "") {
+        if (Object.keys(collectedChars).length === 0 && collectedChars.constructor === Object) {
             alert("You have not logged in!");
             return
         }
@@ -169,7 +175,7 @@ socket.on("loginState", (data) => {
         } else if (data.state == "success") {
             document.getElementById("verify-header").innerHTML = "Login success!"
             document.getElementById("verify-text").innerHTML = "Go ahead and close this window. It's the little X button up there.";
-            userID = data.payload;
+            collectedChars = data.payload;
         } else if (data.state == "wrongPassword") {
             document.getElementById("verify-header").innerHTML = "Wrong password!"
             document.getElementById("verify-text").innerHTML = "Close this window and try logging in again.";
